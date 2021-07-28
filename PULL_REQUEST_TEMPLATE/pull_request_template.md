@@ -2,14 +2,17 @@
 
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. 
 
-Fixes #(issue number)
-
 ## How Has This Been Tested?
 
 
 
 ## Checklist:
 
+- [ ] I linked the issues it addresses
+- [ ] I have assigned at least 1 reviewer
+- [ ] I have applied appropriate labels
+- [ ] I have assigned it to a milestone
+- [ ] I have assigned it to a project
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have made corresponding changes to the documentation
