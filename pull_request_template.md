@@ -3,8 +3,14 @@
 Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. 
 
 ## How Has This Been Tested?
-Note: Please include unit tests and integration tests that cover the update.  The unit tests should be fast (ms) and the integration tests should be representative of real use cases.
+**Note:** Please include unit tests and integration tests that cover the update.  The unit tests should be fast (ms) and the integration tests should be representative of real use cases.
 
+## Checks:
+
+**Lint Score:** 
+(Should be reported by the PR workflow check)
+
+**Test Coverage:**
 
 ## Checklist:
 
@@ -21,3 +27,5 @@ Note: Please include unit tests and integration tests that cover the update.  Th
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] I have checked my code and corrected any misspellings
+
+
