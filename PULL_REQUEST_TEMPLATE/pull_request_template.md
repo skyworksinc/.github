@@ -8,7 +8,8 @@ Please include a summary of the change and which issue is fixed. Please also inc
 
 ## Checklist:
 
-- [ ] I linked the issues it addresses, a pull request should have 1-3 linked issues
+- [ ] I linked the issues it addresses
+  - a pull request should have 1-3 linked issues
 - [ ] I have assigned at least 1 reviewer
 - [ ] I have applied appropriate labels
 - [ ] I have assigned it to a milestone
