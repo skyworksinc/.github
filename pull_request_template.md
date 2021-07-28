@@ -7,10 +7,12 @@ Please include a summary of the change and which issue is fixed. Please also inc
 
 ## Checks:
 
-**Lint Score:** 
+**Lint Score:**  
+
 (If a PR worlflow is setup it should report it. Check in the log or the report attached as an artifact)
 
 **Test Coverage:**
+
 (If a PR worlflow is setup it should report it. Check in the log or the report attached as an artifact)
 
 ## Checklist:
