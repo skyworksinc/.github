@@ -1,0 +1,16 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'Thank you for contributing your first issue.  Please use the appropriate issue templates when possible and provide a detailed description and plan of action.'
+        pr-message: 'Thank you for contributing a PR.  Please see development tips and conventions at http://idshost/ids/Development.html# on the Skyworks intranet.'
