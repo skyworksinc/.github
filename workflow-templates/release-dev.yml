@@ -1,0 +1,142 @@
+name: Dev Release
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/dev-skyworks"
+  DOC_PATH: "/prj/ids/docs/dev/${{ github.event.repository.name }}"
+
+jobs:
+  build_conda_package:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: build
+          environment-file: envs/build.yml
+          python-version: 3.7
+      - name: Build Env Info
+        run: |
+          echo "CONDA INFORMATION"
+          echo "-----------------"
+          conda info
+          conda list
+      - name: Build Conda Package
+        id: build-package
+        run: |
+          echo "BUILD PACKAGE"
+          echo "-------------"
+          OUT=`conda build --output conda-recipe`
+          echo "PACKAGE_PATH=$OUT" >> $GITHUB_ENV
+          echo ""
+          echo "Package output path"
+          echo "-------------------"
+          echo "  $OUT"
+          echo ""
+          conda build -c defaults \
+                      -c conda-forge \
+                      conda-recipe
+      - uses: actions/upload-artifact@v2
+        with:
+          name: conda package
+          path: ${{ env.PACKAGE_PATH }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage report (txt)
+          path: coverage_report.txt
+
+  build_docs:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.get_version.outputs.version }}
+    needs: build_conda_package
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir -p artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: artifacts
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: build-docs
+          environment-file: envs/build-docs.yml
+          python-version: 3.7
+      - name: Create local channel
+        run: |
+          mkdir -p channel/linux-64
+          find . -name "${{ github.event.repository.name }}-*" -exec cp '{}' channel/linux-64/ \;
+          conda install conda-build
+          conda index channel/linux-64
+          conda install -c file://${GITHUB_WORKSPACE}/channel/linux-64 ${{ github.event.repository.name }}
+      - name: Copy files into docs/_static folder
+        run: |
+          bash copy_files.sh -xe
+        working-directory: docs
+      - id: get_version
+        run: |
+          ls -R
+          VERSION=$(python setup.py --version)
+          echo "::set-output name=version::${VERSION}"
+      - name: Display structure of channel files
+        run: ls -R
+        working-directory: channel/linux-64
+      - name: Build Env Info
+        run: |
+          echo "CONDA INFORMATION"
+          echo "-----------------"
+          conda info
+          conda list
+      - name: Build
+        working-directory: docs
+        run: |
+          make html
+      - name: zip the html folder
+        run: zip -r html.zip .
+        working-directory: docs/build/html
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: docs/build/html/html.zip
+
+  release:
+    needs: [build_conda_package, build_docs]
+    runs-on: self-hosted
+    steps:
+      - run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: artifacts
+      - name: release conda package
+        run: |
+          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          conda activate ${{ github.event.repository.name }}-build
+          find . -name "${{ github.event.repository.name }}-*" -exec cp '{}' ${{ env.RELEASE_CHANNEL }}/linux-64/ \;
+          conda index ${{ env.RELEASE_CHANNEL }}
+        working-directory: artifacts
+      - name: Release doc to dev
+        run: |
+          rm -rf html
+          mkdir -p html
+          unzip -o ./docs/html.zip -d html
+          ls -R
+          mkdir -p ${{ env.DOC_PATH }}
+          rsync -avzl html/* ${{ env.DOC_PATH }}
+        working-directory: artifacts
+
