@@ -22,5 +22,6 @@ Release
 -----------------
 
 - [ ] Verify the version number has been updated in the source code
-- [ ] Check that the Conda recipe build number is correct.  It should be reset to 0 for the first build of a version number and then incremented for subsequent rebuilds.
+- [ ] Check that the Conda recipe build number is correct.  
+      It should be reset to 0 for the first build of a version number and then incremented for subsequent rebuilds.
 - [ ] Release to Production
