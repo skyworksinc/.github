@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-** Problem Statement **
+**Problem Statement**
 ----------------------------
 <!-- Describe the problem.  Ex. I'm always frustrated when [...] -->
 
