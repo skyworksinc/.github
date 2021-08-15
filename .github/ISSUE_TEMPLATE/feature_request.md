@@ -6,24 +6,25 @@ labels: enhancement
 assignees: ''
 
 ---
-
+** Problem Statement **
+-----------------------
 **Is your feature request related to a problem? Please describe.**
---------------------------------------------------------------------------
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+Clearly and concisely describe the problem. 
+Ex. I'm always frustrated when [...]
 
-**Describe the solution you'd like**
+**Proposed Solution**
 -------------------------------------------
 A clear and concise description of what you want to happen.
 
-**Describe alternatives you've considered**
+**Alternatives Considered**
 -----------------------------------------------
 A clear and concise description of any alternative solutions or features you've considered.
 
 **Additional context**
 -------------------------
-Add any other context or screenshots about the feature request here.
+Add any other context about the feature request here.
 
-**Proposed Plan of Action**
+**Proposed Action Plan**
 -------------------------------
 1. we'll do this
 2. We'll do that
