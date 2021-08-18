@@ -9,6 +9,7 @@ assignees: ''
 <!--
 - Tasks should be marked off when a linked PR for them is ready for review
 - Order each section from highest to lowest priority
+- Each issue should be listed as a subtask under the pull request for it.
 -->
 
 Issues
