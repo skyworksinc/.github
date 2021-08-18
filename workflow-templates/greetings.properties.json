@@ -2,4 +2,8 @@
     "name": "Greetings",
     "description": "Greets users who are first time contributors to the repo",
     "iconName": "smiley",
+    "categories": [
+        "Go"
+    ],
+    "filePatterns": []
 }
