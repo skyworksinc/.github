@@ -7,9 +7,9 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+**Description**
 ------------------------
-A clear and concise description of the bug.
+Describe the bug clearly and concisely.
 If applicable, add screenshots to help explain your problem.
 
 **To Reproduce**
