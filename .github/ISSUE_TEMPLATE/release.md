@@ -2,7 +2,7 @@
 name: Release
 about: Suggest an idea for this project
 title: 'v#.#.#'
-labels: enhancement, release
+labels: release
 assignees: ''
 
 ---
