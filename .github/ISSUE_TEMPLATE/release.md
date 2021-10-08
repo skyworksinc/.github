@@ -1,6 +1,6 @@
 ---
 name: Release
-about: Suggest an idea for this project
+about: Prioritize a release milestone's issues
 title: 'v#.#.#'
 labels: release
 assignees: ''
