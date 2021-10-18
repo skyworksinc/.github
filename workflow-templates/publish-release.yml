@@ -1,0 +1,16 @@
+# Releases the project to IDS when a GitHub release is published.
+# Also supports a manual release of the latest release
+Name: Publish Release
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  release-docs:
+    uses: skyworksinc/.github/.github/workflows/release-docs.yml@main
+    with: 
+      docs-path: "/prj/ids/docs/${{ github.event.repository.name }}"
+
+  release-pkg:
+      uses: skyworksinc/.github/.github/workflows/release-pkg.yml@main

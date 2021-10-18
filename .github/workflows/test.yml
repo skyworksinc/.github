@@ -15,7 +15,7 @@ jobs:
       docs-path: "/prj/ids/docs/example"
 
   test-release-pkg:
-      uses: skyworksinc/.github/.github/workflows/release-production-pkg.yml@main
+      uses: skyworksinc/.github/.github/workflows/release-pkg.yml@main
       needs: test-draft-release
   
 test-update-env:
