@@ -1,0 +1,26 @@
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+
+jobs:
+  build_pkg:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Conda
+        uses: cascode-labs/build-conda-action@v0.1.1
+        with:
+          BASE_ENV_PREFIX: '/prj/ids/ids-conda/envs/anaconda'
+  build_docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build sphinx
+        uses: cascode-labs/build-sphinx-action@v0.1.0

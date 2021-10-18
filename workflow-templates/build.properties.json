@@ -1,0 +1,7 @@
+{
+    "name": "Build",
+    "description": "Builds a conda package and sphinx documentation",
+    "iconName": "release",
+    "categories": ["Python", "YAML"],
+    "filePatterns": []
+}
