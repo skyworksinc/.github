@@ -18,6 +18,6 @@ jobs:
       uses: skyworksinc/.github/.github/workflows/release-pkg.yml@main
       needs: test-draft-release
   
-test-update-env:
+  test-update-env:
       uses: skyworksinc/.github/.github/workflows/update-env.yml@main
       needs: test-release-pkg
