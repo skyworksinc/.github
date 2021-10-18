@@ -1,5 +1,5 @@
 {
     "name": "Release Dev Version",
     "description": "Release a dev version of the project to the dev conda channel",
-    "iconName": "release",
+    "iconName": "release"
 }

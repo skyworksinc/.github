@@ -1,0 +1,35 @@
+
+name: Update Env Package
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: 'Either the environment''s name or prefix'
+        required: true
+        type: string
+      package-name:
+        required: true
+        type: string
+env:
+  release-artifact-path: ${{ runner.temp	}}/release_artifacts
+  RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+  update-env-package:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - run: mkdir -p ${{ env.release-artifact-path }}
+      - name: update env
+        run: |
+          echo "updating ${{ inputs.env }}"
+          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          conda activate ${{ inputs.env }}
+          conda update -y ${{ inputs.package-name }} || \
+            conda install -y ${{ inputs.package-name }} || \
+          conda create -y ${{ inputs.env }} &&
+            conda install -y ${{ inputs.package-name }} || \

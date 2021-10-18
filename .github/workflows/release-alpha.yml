@@ -1,0 +1,54 @@
+
+name: Alpha Release
+
+on:
+  workflow_call:
+    inputs:
+      docs-path:
+        required: true
+        type: string
+env:
+  release-artifact-path: ${{ runner.temp	}}/release_artifacts
+  RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+  release:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - run: mkdir -p ${{ env.release-artifact-path }}
+      - name: release-downloader
+        uses: robinraju/release-downloader@v1.2
+        with:
+          repository: ${{ github.repository }}
+          out-file-path: ${{ env.release-artifact-path }}
+          tarBall: false
+          zipBall: false
+          token: ${{ github.token }}
+          latest: true
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ${{ env.release-artifact-path }}
+      - name: release conda package
+        run: |
+          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          conda activate dev
+          echo "RELEASING TO PROD CHANNEL"
+          echo "-------------------------"
+          find . -name "*.tar.bz2" -exec cp '{}' ${{ env.RELEASE_CHANNEL }}/linux-64/ \;
+          conda index ${{ env.RELEASE_CHANNEL }}
+          echo "Conda packages released to ${{ env.RELEASE_CHANNEL }}"
+          ls *.tar.bz2
+
+      - name: Release docs to production
+        run: |
+          mkdir -p html
+          unzip -o ./docs/html.zip -d html
+          ls -R
+          rsync -avzl html/* ${{ inputs.docs-path }}
+          echo "IDS documentation released to ${{ inputs.docs-path }}"
+        working-directory: ${{ env.release-artifact-path }}
+          

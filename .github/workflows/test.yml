@@ -1,0 +1,18 @@
+
+name: Test Release workflows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-draft-release:
+    
+  test-release-docs:
+    uses: skyworksinc/.github/.github/workflows/release-docs.yml@main
+    needs: test-draft-release
+    with: 
+      docs-path: "/prj/ids/docs/example"
+
+  test-release-pkg:
+      uses: skyworksinc/.github/.github/workflows/release-production-pkg.yml@main
+      needs: upload-example-artifacts

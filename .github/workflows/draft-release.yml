@@ -1,0 +1,54 @@
+name: Draft Release
+
+on:
+  workflow_call:
+  
+jobs:
+  build_conda_package:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Conda
+        uses: cascode-labs/build-conda-action@v0.1.0
+        with:
+          BASE_ENV_PREFIX: '/prj/ids/ids-conda/envs/anaconda'
+  build_docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build sphinx docs
+        uses: cascode-labs/build-sphinx-action@v0.1.0
+  github-release:
+    needs: [build_conda_package, build_docs]
+    runs-on: self-hosted
+    steps:
+      - name: Get version
+        id: get-version
+        run:
+          VERSION=$(python setup.py --version)
+          echo "::set-output name=version::${VERSION}"
+      - run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Display downloaded artifacts
+        run: ls -R
+        working-directory: artifacts
+      - name: Github Release Flow
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{steps.get-version.outputs.version}}
+          files: |
+            ./artifacts/conda_package.zip
+            ./artifacts/documentation.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      

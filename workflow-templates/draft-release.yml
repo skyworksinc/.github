@@ -1,0 +1,69 @@
+name: Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The semantic release version 
+        required: true
+        default: v0.0.0
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check for default version
+        run: |
+          if [ ${{ github.event.inputs.version }} = ""]
+      - run: |
+          > version
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: build
+          environment-file: envs/build.yml
+          python-version: 3.7
+      - name: Build Conda
+        uses: cascode-labs/build-conda-action@v0.1.0
+  build_conda_package:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: build
+          environment-file: envs/build.yml
+          python-version: 3.7
+      - name: Build Conda
+        uses: cascode-labs/build-conda-action@v0.1.0
+
+  build_docs:
+    runs-on: ubuntu-latest
+    needs: build_conda_package
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build sphinx docs
+        uses: cascode-labs/build-sphinx-action@v0.1.0
+
+
+  draft_release:
+    needs: [build_conda_package, build_docs]
+    runs-on: self-hosted
+    steps:
+      - run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+

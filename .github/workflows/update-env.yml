@@ -1,0 +1,42 @@
+
+name: Update Env
+
+on:
+  workflow_call:
+    inputs:
+      env-name:
+        required: false
+        type: string
+        default: ''
+      env-prefix:
+        required: false
+        type: string
+        default: ''
+      env-yaml-path:
+        required: true
+        type: string
+env:
+  RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
+
+jobs:
+  update-env:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - name: update env
+        run: |
+          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          if [ ! -z ${{ inputs.env-name }} ]; then
+            echo "updating ${{ inputs.env-name }}"
+            conda env update -y -n ${{ inputs.env-name }} \
+                             -f ${{ inputs.env-yaml-path }}
+          elif [ ! -z ${{ inputs.env-name }} ]; then
+            echo "updating ${{ inputs.env-prefix }}"
+            conda env update -y -p ${{ inputs.env-prefix }} \
+                             -f ${{ inputs.env-yaml-path }}
+          else
+            echo "Env update skipped since neither"
+            echo "env-name nor env-prefix was specified"
+          fi
