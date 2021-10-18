@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
+  release-pkg:
+      uses: skyworksinc/.github/.github/workflows/release-pkg.yml@main
+
   release-docs:
     uses: skyworksinc/.github/.github/workflows/release-docs.yml@main
     with: 
       docs-path: "/prj/ids/docs/${{ github.event.repository.name }}"
-
-  release-pkg:
-      uses: skyworksinc/.github/.github/workflows/release-pkg.yml@main
