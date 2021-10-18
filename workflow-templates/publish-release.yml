@@ -1,6 +1,6 @@
 # Releases the project to IDS when a GitHub release is published.
 # Also supports a manual release of the latest release
-Name: Publish Release
+name: Publish Release
 on:
   release:
     types: [published]
