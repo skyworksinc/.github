@@ -6,6 +6,7 @@ on:
 
 jobs:
   test-draft-release:
+    uses: skyworksinc/.github/.github/workflows/draft-release.yml@main
     
   test-release-docs:
     uses: skyworksinc/.github/.github/workflows/release-docs.yml@main
@@ -15,4 +16,8 @@ jobs:
 
   test-release-pkg:
       uses: skyworksinc/.github/.github/workflows/release-production-pkg.yml@main
-      needs: upload-example-artifacts
+      needs: test-draft-release
+  
+test-update-env:
+      uses: skyworksinc/.github/.github/workflows/update-env.yml@main
+      needs: test-release-pkg

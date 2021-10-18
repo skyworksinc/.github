@@ -1,6 +1,6 @@
-
 name: Update Env
-
+# Updates an environment with the specified edefinition yaml file
+#  The environment is created if it doesn't exist yet.
 on:
   workflow_call:
     inputs:
@@ -31,10 +31,16 @@ jobs:
           if [ ! -z ${{ inputs.env-name }} ]; then
             echo "updating ${{ inputs.env-name }}"
             conda env update -y -n ${{ inputs.env-name }} \
-                             -f ${{ inputs.env-yaml-path }}
+                             -f ${{ inputs.env-yaml-path }} \
+            || \
+            conda env create -y -n ${{ inputs.env-name }} \
+                             -f ${{ inputs.env-yaml-path }} || \
           elif [ ! -z ${{ inputs.env-name }} ]; then
             echo "updating ${{ inputs.env-prefix }}"
             conda env update -y -p ${{ inputs.env-prefix }} \
+                             -f ${{ inputs.env-yaml-path }}
+            || \
+            conda env create -y -p ${{ inputs.env-prefix }} \
                              -f ${{ inputs.env-yaml-path }}
           else
             echo "Env update skipped since neither"
