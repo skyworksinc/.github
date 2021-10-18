@@ -1,0 +1,7 @@
+{
+    "name": "Publish Release",
+    "description": "Releases to IDS",
+    "iconName": "release",
+    "categories": ["Python", "YAML"],
+    "filePatterns": []
+}
