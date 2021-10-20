@@ -20,7 +20,7 @@ jobs:
 
   test-update-env:
       uses: skyworksinc/.github/.github/workflows/update-env.yml@main
-      needs: test-release-pkg, 
+      needs: test-release-pkg
       with:
         env-prefix: ./test_workspace
         env-yaml-path: workflow_testing/test_env.yml
