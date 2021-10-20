@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       env:
-        description: 'Either the environment''s name or prefix'
+        description: 'The environment''s name'
         required: true
         type: string
       package-name:
@@ -26,8 +26,8 @@ jobs:
         run: |
           echo "updating ${{ inputs.env }}"
           source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
-          conda activate ${{ inputs.env }}
+          conda activate ${{ inputs.env }} && \
           conda update -y ${{ inputs.package-name }} || \
             conda install -y ${{ inputs.package-name }} || \
           conda create -y ${{ inputs.env }} && \
-            conda install -y ${{ inputs.package-name }} || \
+            conda install -y ${{ inputs.package-name }}
