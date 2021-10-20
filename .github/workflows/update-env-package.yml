@@ -29,5 +29,5 @@ jobs:
           conda activate ${{ inputs.env }}
           conda update -y ${{ inputs.package-name }} || \
             conda install -y ${{ inputs.package-name }} || \
-          conda create -y ${{ inputs.env }} &&
+          conda create -y ${{ inputs.env }} && \
             conda install -y ${{ inputs.package-name }} || \
