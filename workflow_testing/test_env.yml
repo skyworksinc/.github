@@ -1,0 +1,6 @@
+# An example environment to test the update-env workflow
+name: workflow_test
+channels:
+  - http://idshost:5050/ids-skyworks
+dependencies:
+  - example

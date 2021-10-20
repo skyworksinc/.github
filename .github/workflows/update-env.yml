@@ -1,9 +1,12 @@
 name: Update Env
-# Updates an environment with the specified edefinition yaml file
+# Updates an environment with the specified definition yaml file
 #  The environment is created if it doesn't exist yet.
 on:
   workflow_call:
     inputs:
+      env-yaml-path:
+        required: true
+        type: string
       env-name:
         required: false
         type: string
@@ -12,9 +15,7 @@ on:
         required: false
         type: string
         default: ''
-      env-yaml-path:
-        required: true
-        type: string
+      
 env:
   RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
 
@@ -25,6 +26,7 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
+      - uses: actions/checkout@v2
       - name: update env
         run: |
           source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
