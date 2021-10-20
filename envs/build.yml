@@ -1,0 +1,10 @@
+# An example environment to test the update-env workflow
+name: workflow_test
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - conda
+  - conda-build
+  - conda-verify
+  - python=3.7
