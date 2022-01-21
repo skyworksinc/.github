@@ -12,7 +12,7 @@ on:
         required: true
         type: string
 env:
-  RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
+  BASE_ENV_PREFIX: "/prj/ids/ids-conda/envs/base"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
       - name: update env
         run: |
           echo "updating ${{ inputs.env }}"
-          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          source ${{ env.BASE_ENV_PREFIX }}/etc/profile.d/conda.sh
           conda activate ${{ inputs.env }} && \
           conda update -y ${{ inputs.package-name }} || \
             conda install -y ${{ inputs.package-name }} || \
