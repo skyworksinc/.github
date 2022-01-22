@@ -1,4 +1,4 @@
-## Skyworks Automated Design 👋
+# Skyworks Automated Design 👋
 
 <!--
 
@@ -11,5 +11,5 @@
 🧙 Remember, you can do mighty things with the power of [Markdown](https://guides.github.com/features/mastering-markdown/)
 -->
 
-🙋‍♀️ The [Skyworks](https://www.skyworksinc.com/) Silicon and SOI integrated circuit design automation organization.
-
+🙋‍♀️ The [Skyworks](https://www.skyworksinc.com/) Silicon and SOI integrated
+circuit design automation organization.

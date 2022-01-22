@@ -5,6 +5,7 @@ on:
   workflow_call:
 env:
   RELEASE_CHANNEL: "/prj/ids/ids-conda/channels/ids-skyworks"
+  IDS_ENVS_ROOT: "/prj/ids/ids-conda/envs-production"
 
 jobs:
   release:
@@ -31,7 +32,7 @@ jobs:
         working-directory: ${{ runner.temp }}/release_artifacts
       - name: release conda package
         run: |
-          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          source ${{ env.IDS_ENVS_ROOT }}/base/etc/profile.d/conda.sh
           conda activate build
           echo "RELEASING TO PROD CHANNEL"
           echo "-------------------------"
