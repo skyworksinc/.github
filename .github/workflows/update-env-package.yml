@@ -12,7 +12,7 @@ on:
         required: true
         type: string
 env:
-  BASE_ENV_PREFIX: "/prj/ids/ids-conda/envs/base"
+  BASE_ENV_PREFIX: "/prj/ids/ids-conda/envs-production/base"
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:

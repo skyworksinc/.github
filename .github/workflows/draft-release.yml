@@ -14,7 +14,7 @@ jobs:
       - name: Build Conda
         uses: cascode-labs/build-conda-action@v0.1.0
         with:
-          BASE_ENV_PREFIX: '/prj/ids/ids-conda/envs/anaconda'
+          BASE_ENV_PREFIX: "/prj/ids/ids-conda/envs-production/base"
   build_docs:
     runs-on: ubuntu-latest
     defaults:

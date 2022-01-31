@@ -34,7 +34,7 @@ jobs:
         working-directory: ${{ env.release-artifact-path }}
       - name: release conda package
         run: |
-          source /prj/ids/ids-conda/envs/anaconda/etc/profile.d/conda.sh
+          source /prj/ids/ids-conda/envs-production/base/etc/profile.d/conda.sh
           conda activate dev
           echo "RELEASING TO PROD CHANNEL"
           echo "-------------------------"
