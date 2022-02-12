@@ -33,7 +33,7 @@ jobs:
       - name: release conda package
         run: |
           source ${{ env.IDS_ENVS_ROOT }}/base/etc/profile.d/conda.sh
-          conda activate build
+          conda activate dev
           echo "RELEASING TO PROD CHANNEL"
           echo "-------------------------"
           find . -name "*.tar.bz2" -exec cp '{}' ${{ env.RELEASE_CHANNEL }}/linux-64/ \;
