@@ -1,0 +1,64 @@
+name: Check Version
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get version number from file in repo
+        id: file-version
+        run: |
+          VERSION=`cat ${{ inputs.package }}/version`
+          echo v$VERSION
+          echo "::set-output name=version::$(echo v$VERSION)"
+      - name: Get version number based on label
+        id: label-version
+        uses: jefflinse/pr-semver-bump@v1
+        with:
+          mode: validate
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          major-label: major release
+          minor-label: minor release
+          patch-label: patch release
+          require-release-notes: false
+          release-notes-prefix: -- additional release notes --
+          release-notes-suffix: -- end additional release notes --
+          with-v: true
+      - name: print versions
+        run: |
+          echo "File version:" ${{ steps.file-version.outputs.version }}
+          echo "Label version:" ${{ steps.label-version.outputs.version }}
+          echo "Previous version:" ${{ steps.label-version.outputs.old-version }}
+          echo ""
+          echo "Debug info:"
+          echo "github.event.number: ${{ github.event.number }}"
+          echo "github.run_id: ${{ github.run_id }}"
+      - name: successful version check
+        if:  steps.file-version.outputs.version == steps.label-version.outputs.version
+        uses: teamniteo/pull_request_status_action@v1.0.0
+        with:
+          pr_number: ${{ github.event.number }}
+          state: success
+          repository: ${{ github.repository }}
+          context: Release Version
+          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          description: "${{ steps.file-version.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Failed version check
+        if:  steps.file-version.outputs.version != steps.label-version.outputs.version
+        uses: teamniteo/pull_request_status_action@v1.0.0
+        with:
+          pr_number: ${{ github.event.number }}
+          state: failure
+          repository: ${{ github.repository }}
+          context: Release Version
+          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          description: "file ${{ steps.file-version.outputs.version }} mismatches label ${{ steps.label-version.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
