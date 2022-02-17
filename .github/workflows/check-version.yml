@@ -3,6 +3,7 @@ on:
   workflow_call:
     inputs:
       package:
+        description: Python package or folder containing the version file
         required: true
         type: string
 jobs:
