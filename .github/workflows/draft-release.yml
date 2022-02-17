@@ -1,54 +1,61 @@
 name: Draft Release
-
 on:
   workflow_call:
-  
+    inputs:
+      package: 
+        description: Python package or folder containing the version file
+        required: true
+        type: string
+
 jobs:
-  build_conda_package:
+  # build:
+  #   if: github.event_name == 'workflow_dispatch' || ( github.event_name == 'pull_request' && ${{ github.event.pull_request.merged }} )
+  #   uses: skyworksinc/DataPanels/.github/workflows/build.yml@master
+
+  draft-release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
+    if: (github.event_name == 'workflow_dispatch' || ( github.event_name == 'pull_request' && ${{ github.event.pull_request.merged }} )) && "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
-      - name: Build Conda
-        uses: cascode-labs/build-conda-action@v0.1.0
+      - name: Get version number
+        id: version
+        run: |
+          VERSION=`cat ${{ inputs.package }}/version`
+          echo v$VERSION
+          echo "::set-output name=version::$(echo v$VERSION)"
+      - name: Download workflow artifact
+        uses: dawidd6/action-download-artifact@v2.16.0
         with:
-          BASE_ENV_PREFIX: "/prj/ids/ids-conda/envs-production/base"
-  build_docs:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build sphinx docs
-        uses: cascode-labs/build-sphinx-action@v0.1.0
-  github-release:
-    needs: [build_conda_package, build_docs]
-    runs-on: self-hosted
-    steps:
-      - name: Get version
-        id: get-version
-        run:
-          VERSION=$(python setup.py --version)
-          echo "::set-output name=version::${VERSION}"
-      - run: |
-          rm -rf artifacts
-          mkdir -p artifacts
-      - uses: actions/download-artifact@v2
-        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: build.yml
+          workflow_conclusion: success
+          commit: ${{github.event.pull_request.head.sha}}
           path: artifacts
-      - name: Display downloaded artifacts
-        run: ls -R
-        working-directory: artifacts
-      - name: Github Release Flow
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{steps.get-version.outputs.version}}
-          files: |
-            ./artifacts/conda_package.zip
-            ./artifacts/documentation.zip
+      - name: Create draft github release
+        id: release
+        run: |
+          zip -r artifacts/conda_package.zip artifacts/conda_package
+          zip -r artifacts/documentation.zip artifacts/documentation
+          echo "artifacts/ contents:"
+          ls -al artifacts
+          echo ""
+          echo "RELEASE:"
+          set draft_url=`gh release create \
+            --draft \
+            --generate-notes \
+            --title ${{ steps.version.outputs.version }} \
+            --discussion-category Releases \
+            ${{ steps.version.outputs.version }} \
+            artifacts/*.zip`
+            echo "${draft_url}"
+            echo "::set-output name=draft_url::$(echo ${draft_url})"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        uses: marocchino/sticky-pull-request-comment@v2.2.0
+        with:
+          header: release version
+          message: |
+            [Draft release: ${{ steps.version.outputs.version }}](${{ steps.release.outputs.draft_url }})
+            [Final release: ${{ steps.version.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.version.outputs.version }})
