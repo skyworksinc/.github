@@ -5,9 +5,7 @@ on:
     branches:
       - master
     types: [closed]
-
 jobs:
-
   draft-release:
     uses: skyworksinc/.github/.github/workflows/draft-release.yml@main
     with:
