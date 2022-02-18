@@ -1,0 +1,7 @@
+{
+   "name": "Check Version",
+   "description": "Checks a PR's release version label",
+   "iconName": "release",
+   "categories": ["Python"],
+   "filePatterns": []
+}

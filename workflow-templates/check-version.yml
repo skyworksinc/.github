@@ -1,0 +1,10 @@
+name: Check Version
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  draft-release:
+    uses: skyworksinc/.github/.github/workflows/check-version.yml@main
+    with:
+      package: package_name
