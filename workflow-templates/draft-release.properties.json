@@ -1,0 +1,7 @@
+{
+   "name": "Draft Release",
+   "description": "Drafts a new release when a PR is merged",
+   "iconName": "release",
+   "categories": ["Python"],
+   "filePatterns": []
+}
