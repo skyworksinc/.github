@@ -1,0 +1,41 @@
+name: Release Env
+# Updates a production environment with the specified definition yaml file
+#  The environment is created if it doesn't exist yet.
+# It also adds the environments yml file in the root envs folder.
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        description: 'Name of the project folder where it will release'
+        required: true
+        type: string
+      dist-folder-path:
+        description: 'source folder whcih will have its contents released to IDS'
+        required: true
+        type: string
+      version:
+        description: 'version number of the project (usually a semantic version)'
+        required: true
+        type: string
+      release-type:
+        description: '"dev" or "prod". If it is prod then the "latest" symbolic link gets updated'
+        required: false
+        type: string
+        default: "dev"
+
+jobs:
+  update-env:
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release to IDS
+        run: |
+          ids_release.sh \
+          ${{ inputs.project-name }} \
+          ${{ secrets.MAYBERC_PASSWORD }} \
+          ${{ inputs.dist-folder-path }} \
+          ${{ inputs.version }} \
+          ${{ inputs.release-type }}
